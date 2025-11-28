@@ -1,14 +1,14 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../core/models/product.model';
+import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, ProductCardComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
@@ -42,15 +42,9 @@ export class ProductListComponent implements OnInit {
     }
   }
 
-  addToCart(product: Product, event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
+  // Handler for child component event
+  handleAddToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
-    this.showNotification(`${product.name} added to cart!`);
-  }
-
-  private showNotification(message: string): void {
-    // Simple notification - you can enhance this with a proper toast service
-    alert(message);
+    alert(`${product.name} added to cart!`);
   }
 }
