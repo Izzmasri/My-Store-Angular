@@ -1,25 +1,35 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, map, tap } from 'rxjs';
+import { isPlatformServer } from '@angular/common';
 import { Product } from '../models/product.model';
-import productData from '../../../assets/data/products.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  constructor() {}
+  private jsonUrl = '/assets/data/products.json';
+
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   getProducts(): Observable<Product[]> {
-    return of(productData.products);
+    if (isPlatformServer(this.platformId)) {
+      return of([]);
+    }
+
+    return this.http.get<{ products: Product[] }>(this.jsonUrl).pipe(
+      map((response) => response.products),
+      tap((data) => console.log('ProductService fetched:', data))
+    );
   }
 
   getProductById(id: number): Observable<Product | undefined> {
-    const product = productData.products.find((p) => p.id === id);
-    return of(product);
+    return this.getProducts().pipe(map((products) => products.find((p) => p.id === id)));
   }
 
   getProductsByCategory(category: string): Observable<Product[]> {
-    const products = productData.products.filter((p) => p.category === category);
-    return of(products);
+    return this.getProducts().pipe(
+      map((products) => products.filter((p) => p.category === category))
+    );
   }
 }

@@ -17,6 +17,9 @@ export class ProductListComponent implements OnInit {
   private cartService = inject(CartService);
 
   products = signal<Product[]>([]);
+
+  private allProducts: Product[] = [];
+
   selectedCategory = signal<string>('All');
   categories = signal<string[]>(['All', 'Electronics', 'Accessories']);
 
@@ -26,23 +29,33 @@ export class ProductListComponent implements OnInit {
 
   loadProducts(): void {
     this.productService.getProducts().subscribe({
-      next: (products) => this.products.set(products),
-      error: (error) => console.error('Error loading products:', error),
+      next: (products: Product[]) => {
+        if (products.length > 0) {
+          this.allProducts = products;
+          this.applyFilter();
+        } else {
+          console.log('Still waiting for data or empty...');
+        }
+      },
+      error: (error: any) => console.error('Error loading products:', error),
     });
   }
 
   filterByCategory(category: string): void {
     this.selectedCategory.set(category);
+    this.applyFilter();
+  }
+
+  private applyFilter(): void {
+    const category = this.selectedCategory();
     if (category === 'All') {
-      this.loadProducts();
+      this.products.set(this.allProducts);
     } else {
-      this.productService.getProductsByCategory(category).subscribe({
-        next: (products) => this.products.set(products),
-      });
+      const filtered = this.allProducts.filter((p) => p.category === category);
+      this.products.set(filtered);
     }
   }
 
-  // Handler for child component event
   handleAddToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
     alert(`${product.name} added to cart!`);
