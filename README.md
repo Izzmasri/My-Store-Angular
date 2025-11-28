@@ -1,59 +1,138 @@
-# MyStore
+# 🛒 Shop Store - Angular E-Commerce Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+A modern e-commerce web application built with Angular 19, featuring product browsing, shopping cart management, and checkout with form validation.
 
-## Development server
+![Angular](https://img.shields.io/badge/Angular-19-red)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0+-38B2AC)
 
-To start a local development server, run:
+## ✨ Features
 
-```bash
+- **Product Catalog** - Browse and filter products by category
+- **Product Details** - View detailed information with ratings
+- **Shopping Cart** - Add, remove, update quantities with persistent storage
+- **Checkout Process** - Complete form validation and order confirmation
+- **Server-Side Rendering** - SEO-friendly with SSR support
+- **Responsive Design** - Mobile-first with Tailwind CSS
+
+## 🛠 Technologies
+
+- **Angular 19** - Standalone components with Signals
+- **TypeScript 5+** - Type-safe development
+- **Tailwind CSS** - Utility-first styling
+- **RxJS** - Reactive programming
+- **SSR** - Server-side rendering enabled
+
+## 📁 Project Structure
+
+```
+my-store/
+├── src/app/
+│   ├── core/                    # Services and models
+│   │   ├── models/              # TypeScript interfaces
+│   │   └── services/            # Cart & Product services
+│   ├── features/                # Feature modules
+│   │   ├── products/            # Product list & details
+│   │   ├── cart/                # Shopping cart
+│   │   └── checkout/            # Checkout & confirmation
+│   ├── shared/                  # Reusable components
+│   └── app.routes.ts            # Route definitions
+|
+└── package.json
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+- Angular CLI 19
+
+### Installation
+
+```
+# Clone repository
+git clone <repository-url>
+cd my-store
+
+# Install dependencies
+npm install
+
+# Run development server
 ng serve
+
+# Open browser
+http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Build for Production
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+ng build --configuration production
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🎯 Key Features
 
-```bash
-ng generate --help
+### Signal-Based State Management
+
+```
+private cartItems = signal<CartItem[]>([]);
+totalItems = computed(() =>
+  this.cartItems().reduce((sum, item) => sum + item.quantity, 0)
+);
 ```
 
-## Building
+### SSR-Compatible Storage
 
-To build the project run:
+```
+private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-```bash
-ng build
+private saveToStorage(): void {
+  if (this.isBrowser) {
+    localStorage.setItem('cartItems', JSON.stringify(this.cartItems()));
+  }
+}
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Lazy Loading Routes
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```
+{
+  path: 'products',
+  loadComponent: () =>
+    import('./features/products/product-list/product-list.component')
+}
 ```
 
-## Running end-to-end tests
+## 🐛 Troubleshooting
 
-For end-to-end (e2e) testing, run:
+**Issue**: `NG0908: Angular requires Zone.js`  
+**Solution**: Add `import 'zone.js';` at top of `main.ts` and `main.server.ts`
 
-```bash
-ng e2e
+**Issue**: `localStorage is not defined`  
+**Solution**: Use `isPlatformBrowser()` check before accessing localStorage
+
+**Issue**: Build cache problems  
+**Solution**: Run `ng cache clean`
+
+## 🔮 Future Enhancements
+
+- User authentication
+- Product search
+- Payment integration
+- Order history
+- Product reviews
+- Admin dashboard
+
+## 👨‍💻 Author
+
+**Izzeddin Masri**
+
+---
+
+**Built with Angular 19 and Tailwind CSS** ❤️
+
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```

@@ -1,0 +1,94 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { Product } from '../models/product.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProductService {
+  private apiUrl = 'assets/data/products.json';
+
+  // Mock data for demonstration
+  private mockProducts: Product[] = [
+    {
+      id: 1,
+      name: 'Wireless Headphones',
+      description: 'Premium noise-cancelling wireless headphones with 30-hour battery life',
+      price: 299.99,
+      imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500',
+      category: 'Electronics',
+      inStock: true,
+      rating: 4.5,
+    },
+    {
+      id: 2,
+      name: 'Smart Watch',
+      description: 'Fitness tracking smartwatch with heart rate monitor',
+      price: 199.99,
+      imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
+      category: 'Electronics',
+      inStock: true,
+      rating: 4.3,
+    },
+    {
+      id: 3,
+      name: 'Laptop Backpack',
+      description: 'Durable water-resistant backpack with laptop compartment',
+      price: 79.99,
+      imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500',
+      category: 'Accessories',
+      inStock: true,
+      rating: 4.7,
+    },
+    {
+      id: 4,
+      name: 'Wireless Mouse',
+      description: 'Ergonomic wireless mouse with precision tracking',
+      price: 49.99,
+      imageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=500',
+      category: 'Electronics',
+      inStock: true,
+      rating: 4.4,
+    },
+    {
+      id: 5,
+      name: 'Mechanical Keyboard',
+      description: 'RGB mechanical gaming keyboard with blue switches',
+      price: 129.99,
+      imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500',
+      category: 'Electronics',
+      inStock: true,
+      rating: 4.6,
+    },
+    {
+      id: 6,
+      name: 'Portable Charger',
+      description: '20000mAh power bank with fast charging',
+      price: 39.99,
+      imageUrl: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500',
+      category: 'Accessories',
+      inStock: true,
+      rating: 4.2,
+    },
+  ];
+
+  constructor(private http: HttpClient) {}
+
+  getProducts(): Observable<Product[]> {
+    // Use mock data - replace with HTTP call in production
+    return of(this.mockProducts);
+    // return this.http.get<Product[]>(this.apiUrl);
+  }
+
+  getProductById(id: number): Observable<Product | undefined> {
+    const product = this.mockProducts.find((p) => p.id === id);
+    return of(product);
+    // return this.http.get<Product>(`${this.apiUrl}/${id}`);
+  }
+
+  getProductsByCategory(category: string): Observable<Product[]> {
+    const filtered = this.mockProducts.filter((p) => p.category === category);
+    return of(filtered);
+  }
+}
